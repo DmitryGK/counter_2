@@ -1,59 +1,96 @@
+import { useEffect, useState } from 'react'
+import ButtonsBlock from './Components/buttonsBlock/ButtonBlock'
+import { MainDisplay } from './Components/mainDisplay/MainDisplay'
 import s from './Counter.module.css'
-import {useEffect, useState} from "react";
-import {MainDisplay} from "./Components/MainDisplay";
-import {ControlButtons} from "./Components/ControlButtons";
-
 
 const Counter = () => {
 
-    const [activeSettings, setActiveSettings] = useState(false)
-    const [startValue, setStartValue] = useState(0)
-    const [value, setValue] = useState(startValue)
-    const [maxValue, setMaxValue] = useState(0)
-    const [disableInc, setDisableInc] = useState(false)
-    const [disableReset, setDisableReset] = useState(true)
-
-
-
-    const incValue = () => {
-        if (value < maxValue) {
-            setValue(value + 1)
-        } else {
-            setDisableInc(true)
+    useEffect(() => {
+        let mainValue = localStorage.getItem('counterValue')
+        let lastStartValue = localStorage.getItem('startValue')
+        let lastMaxValue = localStorage.getItem('maxValue')
+        if (mainValue && lastMaxValue && lastStartValue) {
+            let newValue = JSON.parse(mainValue)
+            let newStartValue = JSON.parse(lastStartValue)
+            let newMaxValue = JSON.parse(lastMaxValue)
+            setValue(newValue)
+            setStartValue(newStartValue)
+            setMaxValue(newMaxValue)
         }
-    }
-    const settings = () => setActiveSettings(!activeSettings)
-    const resetValue = () => {
+    }, [])
+
+    const [startValue, setStartValue] = useState(0)
+    const [maxValue, setMaxValue] = useState(0)
+    const [value, setValue] = useState(startValue)
+    const [settingsMod, setSettingsMod] = useState(false)
+    const [error, setError] = useState(false)
+    const [incDisabled, setIncDisabled] = useState(false)
+    const [resDisabled, setResDisabled] = useState(false)
+    useEffect(() => {
+        localStorage.setItem('counterValue', JSON.stringify(value))
+        localStorage.setItem('startValue', JSON.stringify(startValue))
+        localStorage.setItem('maxValue', JSON.stringify(maxValue))
+    }, [value, maxValue, startValue,])
+
+    
+    function incValue() {
+        if(value < maxValue){
+            setValue(value + 1)
+            setResDisabled(false)
+            if( value + 1 === maxValue){
+                setIncDisabled(true)
+                setError(true)
+            }
+    }}
+    function resetValue() {
         setValue(startValue)
-        setDisableReset(true)
+        setIncDisabled(false)
+        setError(false)
+        setResDisabled(true)
     }
-    const incStartValue = (value: number) => {
+    function changeStartValue(value: number) {
         setStartValue(value)
-        setValue(value)
     }
-    const incMaxValue = (value: number) => setMaxValue(value)
-
-
+    function changeMaxValue(value: number) {
+        setMaxValue(value)
+    }
+    function settingsToggle() {
+        if(settingsMod){
+            setValue(startValue)
+            setStartValue(startValue)
+            setMaxValue(maxValue)
+            setSettingsMod(false)
+            setError(false)
+            setResDisabled(false)
+            setResDisabled(true)
+        }else  setSettingsMod(true)
+    }
 
     return (
         <div className={s.counter}>
-            <MainDisplay activeSettings={activeSettings}
-                         value={value}
-                         maxValue={maxValue}
-                         startValue={startValue}
-                         incStartValue={incStartValue}
-                         incMaxValue={incMaxValue}
-            />
-            <ControlButtons incValue={incValue}
-                            resetValue={resetValue}
-                            settings={settings}
-                            activeSettings={activeSettings}
-                            value={value}
-                            startValue={startValue}
-                            maxValue={maxValue}
-                            disableInc={disableInc}
-                            disableReset={disableReset}
-            />
+            <div className={s.mainDisplay}>
+                <MainDisplay
+                    value={value}
+                    settingsMod={settingsMod}
+                    startValue={startValue}
+                    maxValue={maxValue}
+                    changeStartValue={changeStartValue}
+                    changeMaxValue={changeMaxValue}
+                    setError={setError}
+                    error={error}
+                />
+            </div>
+            <div className={s.buttonsBlock}>
+                <ButtonsBlock
+                    error={error}
+                    incValue={incValue}
+                    resDisabled={resDisabled}
+                    settingsMod={settingsMod}
+                    incDisabled={incDisabled}
+                    resetValue={resetValue}
+                    settingsToggle={settingsToggle}
+                />
+            </div>
         </div>
     )
 }

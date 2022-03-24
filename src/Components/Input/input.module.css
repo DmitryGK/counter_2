@@ -1,0 +1,22 @@
+.input {
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    outline: none;
+    border: 1px solid rgba(255, 175, 4, 0.699)
+}
+.error{
+    background-color: rgba(255, 0, 0, 0.425);
+    border: 1px solid rgba(255, 0, 0, 0.76);
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    outline: none;
+    
+}

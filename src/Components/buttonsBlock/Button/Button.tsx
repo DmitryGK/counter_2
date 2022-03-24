@@ -19,7 +19,7 @@ export const Button = (props:ButtonPropsType) => {
 
     return (
         <div >
-            <button onClick={OnClickHandler} className={s.button} disabled={(props.disabled)}>
+            <button onClick={OnClickHandler} className={s.button} disabled={props.disabled}>
                 {props.name}
             </button>
         </div>
