@@ -20,7 +20,7 @@ export const MainDisplay = (props: MainDisplayPropsType) => {
     function valueController() {
         if(props.startValue < 0 || props.maxValue < 0) {
             props.setError(true)
-        }else if (props.startValue > props.maxValue) {
+        }else if (props.startValue > props.maxValue || props.startValue === props.maxValue) {
             props.setError(true)
         } else if (props.startValue < props.maxValue) {
             props.setError(false)
