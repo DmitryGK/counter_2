@@ -9,7 +9,10 @@ type ActionType = IncValueACType | resetValueACType
 type InitialStateType = typeof InitialState
 
 const InitialState = {
-    value: 0
+    value: 0,
+    startValue: 0,
+    maxValue: 0, 
+    settingsMode: false
 }
 
 export const counterValueReducer = (state: InitialStateType = InitialState, action: ActionType): InitialStateType => {
